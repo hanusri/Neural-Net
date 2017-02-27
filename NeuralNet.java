@@ -6,6 +6,7 @@ import java.util.List;
  */
 public class NeuralNet {
     private List<Layer> layers;
+    private float learningRate;
 
     public NeuralNet() {
         layers = new ArrayList<>();
@@ -17,5 +18,13 @@ public class NeuralNet {
 
     public void setLayers(List<Layer> layers) {
         this.layers = layers;
+    }
+
+    public float getLearningRate() {
+        return learningRate;
+    }
+
+    public void setLearningRate(float learningRate) {
+        this.learningRate = learningRate;
     }
 }
