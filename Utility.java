@@ -3,3 +3,10 @@
  */
 public class Utility {
 }
+
+enum LayerType
+{
+    HIDDEN,
+    INPUT,
+    OUTPUT
+}
