@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,23 @@ public class Node {
 
     public Node(Layer layer) {
         this.layer = layer;
+        adjList = new ArrayList<>();
+        revAdjList = new ArrayList<>();
+    }
+
+    public Node(Layer layer, float inputActivation) {
+        this.layer = layer;
+        this.inputActivation = inputActivation;
+        adjList = new ArrayList<>();
+        revAdjList = new ArrayList<>();
+    }
+
+    public void addEdge(Edge edge) {
+        adjList.add(edge);
+    }
+
+    public void addRevEdge(Edge edge) {
+        revAdjList.add(edge);
     }
 
 
@@ -70,15 +88,8 @@ public class Node {
         return adjList;
     }
 
-    public void setAdjList(List<Edge> adjList) {
-        this.adjList = adjList;
-    }
-
     public List<Edge> getRevAdjList() {
         return revAdjList;
     }
 
-    public void setRevAdjList(List<Edge> revAdjList) {
-        this.revAdjList = revAdjList;
-    }
 }

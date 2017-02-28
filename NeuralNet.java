@@ -6,10 +6,28 @@ import java.util.List;
  */
 public class NeuralNet {
     private List<Layer> layers;
-    private float learningRate;
 
     public NeuralNet() {
         layers = new ArrayList<>();
+    }
+
+    public void initializeNetwork() {
+        // create input layer
+        Layer inputLayer = new Layer(null, LayerType.INPUT);
+        inputLayer.initializeInputLayer();
+        layers.add(inputLayer);
+
+        // create hidden layer
+        for (int i = 0; i < ApplicationRunner.getHiddenLayerCount(); i++) {
+            Layer hiddenLayer = new Layer(layers.get(layers.size() - 1), LayerType.HIDDEN);
+            hiddenLayer.initializeHiddenLayer();
+            layers.add(hiddenLayer);
+        }
+
+        // create output layer
+        Layer outputLayer = new Layer(layers.get(layers.size() - 1), LayerType.OUTPUT);
+        outputLayer.initializeOutputLayer();
+        layers.add(outputLayer);
     }
 
     public List<Layer> getLayers() {
@@ -18,13 +36,5 @@ public class NeuralNet {
 
     public void setLayers(List<Layer> layers) {
         this.layers = layers;
-    }
-
-    public float getLearningRate() {
-        return learningRate;
-    }
-
-    public void setLearningRate(float learningRate) {
-        this.learningRate = learningRate;
     }
 }
