@@ -2,10 +2,10 @@
  * Created by Srikanth on 2/27/2017.
  */
 public class Edge {
-    private float weight;
+    private double weight;
     private Node source;
     private Node destination;
-    private float weightDelta;
+    private double weightDelta;
 
     public Edge(float weight, Node source, Node destination) {
         this.weight = weight;
@@ -13,11 +13,11 @@ public class Edge {
         this.destination = destination;
     }
 
-    public float getWeight() {
+    public double getWeight() {
         return weight;
     }
 
-    public void setWeight(float weight) {
+    public void setWeight(double weight) {
         this.weight = weight;
     }
 
@@ -37,11 +37,11 @@ public class Edge {
         this.destination = destination;
     }
 
-    public float getWeightDelta() {
+    public double getWeightDelta() {
         return weightDelta;
     }
 
-    public void setWeightDelta(float weightDelta) {
+    public void setWeightDelta(double weightDelta) {
         this.weightDelta = weightDelta;
     }
 }

@@ -30,6 +30,48 @@ public class NeuralNet {
         layers.add(outputLayer);
     }
 
+    public void train() {
+        for (int i = 0; i < ApplicationRunner.getIterationCount(); i++) {
+            performForwardPass();
+            performBackwardPass();
+        }
+    }
+
+    private void performForwardPass() {
+        // set the input values
+        Layer inputLayer = layers.get(0);
+        //TODO: Here is where we need to integrate initial output
+        List<Double> lstOutputValues = new ArrayList<>();
+        lstOutputValues.add(1.0);
+        lstOutputValues.add(1.0);
+        lstOutputValues.add(1.0);
+
+        inputLayer.setInputLayerOutputValues(lstOutputValues);
+
+        for (int i = 1; i < layers.size(); i++) {
+            layers.get(i).performForwardPassCalculation();
+        }
+    }
+
+    private void performBackwardPass() {
+        Layer outputLayer = layers.get(layers.size() - 1);
+        //TODO: Here is where we need to integrate Expected/target output
+        double targetValue = 1.0;
+        outputLayer.setTargetValues(targetValue);
+        // Calculate output layer gradients:
+        outputLayer.calculateOutputGradientValue();
+
+        // Calculate hidden layer gradients:
+        for (int i = layers.size() - 2; i > 0; i--) {
+            layers.get(i).calculateGradientValue();
+        }
+
+        // Update all connection weights:
+        for (int i = layers.size() - 2; i >= 0; i--) {
+            layers.get(i).updateEdgesWeight();
+        }
+    }
+
     public List<Layer> getLayers() {
         return layers;
     }

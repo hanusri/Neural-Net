@@ -18,7 +18,7 @@ public class Layer {
 
     public void initializeInputLayer() {
         for (int i = 0; i < ApplicationRunner.getFeaturesCount(); i++) {
-            Node node = new Node(this, 1);
+            Node node = new Node(this);
             nodes.add(node);
         }
     }
@@ -36,7 +36,6 @@ public class Layer {
                 prevNode.addEdge(edge);
                 node.addRevEdge(revEdge);
             }
-
             nodes.add(node);
         }
     }
@@ -54,6 +53,44 @@ public class Layer {
         }
 
         nodes.add(outputNode);
+    }
+
+    public void setInputLayerOutputValues(List<Double> inputLayerOutputValues) {
+        if (this.layerType != LayerType.INPUT)
+            return;
+
+        for (int i = 0; i < inputLayerOutputValues.size(); i++) {
+            nodes.get(i).setOutputX(inputLayerOutputValues.get(i));
+        }
+    }
+
+    public void setTargetValues(double outputLayerTargetValue) {
+        if (this.layerType != LayerType.OUTPUT)
+            return;
+
+        nodes.get(0).setTargetValue(outputLayerTargetValue);
+    }
+
+    public void performForwardPassCalculation() {
+        for (Node node : nodes)
+            node.performForwardPassCalculation();
+    }
+
+    public void calculateOutputGradientValue() {
+        if (this.layerType != LayerType.OUTPUT)
+            return;
+
+        nodes.get(0).calculateOutputGradientValue();
+    }
+
+    public void calculateGradientValue() {
+        for (Node node : nodes)
+            node.calculateGradientValue();
+    }
+
+    public void updateEdgesWeight() {
+        for (Node node : nodes)
+            node.updateEdgesWeight();
     }
 
     public List<Node> getNodes() {

@@ -1,31 +1,72 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Srikanth on 2/27/2017.
  */
 public class Node {
-    private float inputActivation;
-    private float deviation;
+    private double outputX;
+    private double gradient;
     private Layer layer;
     private boolean visited;
-    private int actualOutput;
-    private int expectedOutput;
+    private double targetValue;
     private List<Edge> adjList;
     private List<Edge> revAdjList;
+    private double bias;
 
     public Node(Layer layer) {
         this.layer = layer;
         adjList = new ArrayList<>();
         revAdjList = new ArrayList<>();
+        // randomly generate weight of bias connection
+        if (this.layer.getLayerType() != LayerType.INPUT) {
+            Random rand = new Random();
+            bias = rand.nextFloat() * 2 - 1;
+        }
+
     }
 
-    public Node(Layer layer, float inputActivation) {
-        this.layer = layer;
-        this.inputActivation = inputActivation;
-        adjList = new ArrayList<>();
-        revAdjList = new ArrayList<>();
+    public void performForwardPassCalculation() {
+        float sum = 0;
+        for (Edge prevLayerEdge : revAdjList) {
+            Node prevNode = prevLayerEdge.getDestination();
+            double outputValue = prevNode.getOutputX();
+            Double weight = prevLayerEdge.getWeight();
+            sum += outputValue * weight;
+        }
+        // add bias value
+        sum += bias;
+        outputX = Utility.getSigmoidValue(sum);
     }
+
+    public void calculateOutputGradientValue() {
+        gradient = (targetValue - outputX) * sigmoidDerivative();
+    }
+
+    public void calculateGradientValue() {
+        double sum = 0.0;
+
+        for (Edge edge : adjList)
+            // Sum all the gradient*connection
+            sum += edge.getDestination().getGradient() * edge.getWeight();
+
+        // calculate gradient of this node
+        gradient = sum * sigmoidDerivative();
+    }
+
+    public void updateEdgesWeight() {
+        for (Edge edge : adjList) {
+            Double newWeight = edge.getWeight() + (ApplicationRunner.getLearningRate() * outputX *
+                    edge.getDestination().getGradient());
+            edge.setWeight(newWeight);
+        }
+    }
+
+    private double sigmoidDerivative() {
+        return outputX * (1 - outputX);
+    }
+
 
     public void addEdge(Edge edge) {
         adjList.add(edge);
@@ -35,21 +76,20 @@ public class Node {
         revAdjList.add(edge);
     }
 
-
-    public float getInputActivation() {
-        return inputActivation;
+    public double getOutputX() {
+        return outputX;
     }
 
-    public void setInputActivation(float inputActivation) {
-        this.inputActivation = inputActivation;
+    public void setOutputX(double outputX) {
+        this.outputX = outputX;
     }
 
-    public float getDeviation() {
-        return deviation;
+    public double getGradient() {
+        return gradient;
     }
 
-    public void setDeviation(float deviation) {
-        this.deviation = deviation;
+    public void setGradient(double gradient) {
+        this.gradient = gradient;
     }
 
     public Layer getLayer() {
@@ -68,20 +108,12 @@ public class Node {
         this.visited = visited;
     }
 
-    public int getActualOutput() {
-        return actualOutput;
+    public double getTargetValue() {
+        return targetValue;
     }
 
-    public void setActualOutput(int actualOutput) {
-        this.actualOutput = actualOutput;
-    }
-
-    public int getExpectedOutput() {
-        return expectedOutput;
-    }
-
-    public void setExpectedOutput(int expectedOutput) {
-        this.expectedOutput = expectedOutput;
+    public void setTargetValue(double targetValue) {
+        this.targetValue = targetValue;
     }
 
     public List<Edge> getAdjList() {
@@ -92,4 +124,11 @@ public class Node {
         return revAdjList;
     }
 
+    public double getBias() {
+        return bias;
+    }
+
+    public void setBias(double bias) {
+        this.bias = bias;
+    }
 }
