@@ -14,7 +14,11 @@ public class NeuralNet {
     public void initializeNetwork() {
         // create input layer
         Layer inputLayer = new Layer(null, LayerType.INPUT);
-        inputLayer.initializeInputLayer();
+        boolean validity = inputLayer.initializeInputLayer();
+        if (!validity) {
+            System.out.println("Data is not loaded properly. Please load data for processing");
+            return;
+        }
         layers.add(inputLayer);
 
         // create hidden layer
@@ -31,23 +35,31 @@ public class NeuralNet {
     }
 
     public void train() {
-        for (int i = 0; i < ApplicationRunner.getIterationCount(); i++) {
-            performForwardPass();
+        for (int i = 0; i < ApplicationRunner.getTrainingSetLimit(); i++) {
+            performForwardPass(i);
             performBackwardPass();
         }
     }
 
-    private void performForwardPass() {
+    public void test() {
+        int errorCount = 0;
+        for (int i = ApplicationRunner.getTrainingSetLimit(); i < ApplicationRunner.getData().dataValues.size(); i++) {
+            performForwardPass(i);
+            errorCount += calculateError(i);
+        }
+        double testingAccuracy = (errorCount * 100.0) / (ApplicationRunner.getData().dataValues.size() - ApplicationRunner.getTrainingSetLimit());
+
+        System.out.println("Accuracy Percentage = " + testingAccuracy);
+    }
+
+    private int calculateError(int recordId) {
+        return layers.get(layers.size() - 1).calculateError(recordId);
+    }
+
+    private void performForwardPass(int recordId) {
         // set the input values
         Layer inputLayer = layers.get(0);
-        //TODO: Here is where we need to integrate initial output
-        List<Double> lstOutputValues = new ArrayList<>();
-        lstOutputValues.add(1.0);
-        lstOutputValues.add(1.0);
-        lstOutputValues.add(1.0);
-
-        inputLayer.setInputLayerOutputValues(lstOutputValues);
-
+        inputLayer.setInputLayerOutputValues(recordId);
         for (int i = 1; i < layers.size(); i++) {
             layers.get(i).performForwardPassCalculation();
         }

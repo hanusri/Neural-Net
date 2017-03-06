@@ -1,3 +1,8 @@
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Scanner;
+
 /**
  * Created by Srikanth on 2/27/2017.
  */
@@ -8,9 +13,18 @@ public class ApplicationRunner {
     private static float learningRate;
     private static int featuresCount;
     private static int iterationCount;
+    private static DataSet data;
+    private static int trainingSetLimit;
 
     public static void main(String[] args) {
+        try {
+            run("D:\\train.csv");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //TODO Integrate with pre processing and construct neural network
+        trainingSetLimit = (int) (data.dataValues.size() * 0.8);
         learningRate = Float.parseFloat(args[0]);
         hiddenLayerCount = Integer.parseInt(args[1]);
         hiddenLayerNodeCount = Integer.parseInt(args[2]);
@@ -21,6 +35,7 @@ public class ApplicationRunner {
         network.initializeNetwork();
         // calculate the forward propagation of each layer and calculate all parameters
         network.train();
+        network.test();
     }
 
     public static int getHiddenLayerCount() {
@@ -39,7 +54,60 @@ public class ApplicationRunner {
         return featuresCount;
     }
 
+
     public static int getIterationCount() {
         return iterationCount;
+    }
+
+    public static DataSet getData() {
+        return data;
+    }
+
+    public static int getTrainingSetLimit() {
+        return trainingSetLimit;
+    }
+
+    private static void run(String trainPath) throws InstantiationException, IllegalAccessException, IOException {
+
+        data = DataSet.parseTrainData(trainPath);
+        //   DataSet testData = DataSet.parseTestFile(testPath);
+
+        List<Double> l1 = data.dataValues.get(0).attributes;
+
+        if (l1.size() == 15) {
+            data.normalize(1);
+            data.normalize(3);
+            data.normalize(5);
+            data.normalize(11);
+            data.normalize(12);
+            data.normalize(13);
+        } else if (l1.size() == 5) {
+            for (int i = 0; i < 4; i++)
+                data.normalize(i);
+
+        } else if (l1.size() == 14) {
+
+            for (int i = 0; i <= 2; i++) {
+                data.normalize(i);
+            }
+            for (int i = 4; i <= 7; i++)
+                data.normalize(i);
+            for (int i = 9; i <= 12; i++)
+                data.normalize(i);
+        }
+
+        //input value
+        for (int i = 0; i < data.dataValues.size(); i++) {
+            List l2 = data.dataValues.get(i).getAttributes();
+            for (int j = 0; j < l2.size(); j++)
+                System.out.println(l2.get(j));
+        }
+
+        //target value
+        int j = l1.size();
+        if (j == 13)
+            DataSet.parseTestData(j);
+        for (int k = 0; k < Data.a2.size(); k++)
+            System.out.println(Data.a2.get(k));
     }
 }

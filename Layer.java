@@ -16,11 +16,17 @@ public class Layer {
         this.layerType = layerType;
     }
 
-    public void initializeInputLayer() {
-        for (int i = 0; i < ApplicationRunner.getFeaturesCount(); i++) {
+    public boolean initializeInputLayer() {
+
+        if (ApplicationRunner.getData().dataValues == null || ApplicationRunner.getData().dataValues.size() == 0)
+            return false;
+        List lstinputNodes = ApplicationRunner.getData().dataValues.get(0).getAttributes();
+        for (int i = 0; i < lstinputNodes.size(); i++) {
             Node node = new Node(this);
             nodes.add(node);
         }
+
+        return true;
     }
 
     public void initializeHiddenLayer() {
@@ -55,9 +61,11 @@ public class Layer {
         nodes.add(outputNode);
     }
 
-    public void setInputLayerOutputValues(List<Double> inputLayerOutputValues) {
+    public void setInputLayerOutputValues(int recordId) {
         if (this.layerType != LayerType.INPUT)
             return;
+
+        List<Double> inputLayerOutputValues = ApplicationRunner.getData().dataValues.get(recordId).attributes;
 
         for (int i = 0; i < inputLayerOutputValues.size(); i++) {
             nodes.get(i).setOutputX(inputLayerOutputValues.get(i));
@@ -91,6 +99,15 @@ public class Layer {
     public void updateEdgesWeight() {
         for (Node node : nodes)
             node.updateEdgesWeight();
+    }
+
+    public int calculateError(int recordId) {
+        Node outputNode = nodes.get(0);
+        int nodeOutput = outputNode.getOutputX() >= 0 && outputNode.getOutputX() <= 1 ? 1 : -1;
+
+        int actualOutput = (int) Data.a2.get(recordId);
+
+        return nodeOutput * actualOutput == 1 ? 0 : 1;
     }
 
     public List<Node> getNodes() {
