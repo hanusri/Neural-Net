@@ -11,25 +11,28 @@ public class ApplicationRunner {
     private static int hiddenLayerCount;
     private static int hiddenLayerNodeCount;
     private static float learningRate;
-    private static int featuresCount;
-    private static int iterationCount;
     private static DataSet data;
     private static int trainingSetLimit;
+    private static int datasetType;
 
     public static void main(String[] args) {
+
+
+        //TODO Integrate with pre processing and construct neural network
+
+        learningRate = Float.parseFloat(args[1]);
+        hiddenLayerCount = Integer.parseInt(args[2]);
+        hiddenLayerNodeCount = Integer.parseInt(args[3]);
+        datasetType = Integer.parseInt(args[4]);
+        String datasetPath = String.valueOf(args[5]);
+
         try {
-            run("D:\\train.csv");
+            run(datasetPath);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //TODO Integrate with pre processing and construct neural network
-        trainingSetLimit = (int) (data.dataValues.size() * 0.8);
-        learningRate = Float.parseFloat(args[0]);
-        hiddenLayerCount = Integer.parseInt(args[1]);
-        hiddenLayerNodeCount = Integer.parseInt(args[2]);
-        featuresCount = Integer.parseInt(args[3]);
-        iterationCount = Integer.parseInt(args[4]);
+        trainingSetLimit = (int) (data.dataValues.size() * Integer.parseInt(args[0]) / 100);
 
         NeuralNet network = new NeuralNet();
         network.initializeNetwork();
@@ -50,14 +53,6 @@ public class ApplicationRunner {
         return learningRate;
     }
 
-    public static int getFeaturesCount() {
-        return featuresCount;
-    }
-
-
-    public static int getIterationCount() {
-        return iterationCount;
-    }
 
     public static DataSet getData() {
         return data;
@@ -65,6 +60,10 @@ public class ApplicationRunner {
 
     public static int getTrainingSetLimit() {
         return trainingSetLimit;
+    }
+
+    public static int getDatasetType() {
+        return datasetType;
     }
 
     private static void run(String trainPath) throws InstantiationException, IllegalAccessException, IOException {
@@ -96,7 +95,8 @@ public class ApplicationRunner {
                 data.normalize(i);
         }
 
-        //input value
+
+       /* //input value
         for (int i = 0; i < data.dataValues.size(); i++) {
             List l2 = data.dataValues.get(i).getAttributes();
             for (int j = 0; j < l2.size(); j++)
@@ -108,6 +108,6 @@ public class ApplicationRunner {
         if (j == 13)
             DataSet.parseTestData(j);
         for (int k = 0; k < Data.a2.size(); k++)
-            System.out.println(Data.a2.get(k));
+            System.out.println(Data.a2.get(k));*/
     }
 }

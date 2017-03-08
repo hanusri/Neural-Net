@@ -35,10 +35,16 @@ public class NeuralNet {
     }
 
     public void train() {
+        int errorCount = 0;
         for (int i = 0; i < ApplicationRunner.getTrainingSetLimit(); i++) {
             performForwardPass(i);
+            errorCount += calculateError(i);
             performBackwardPass();
         }
+        double trainingAccuracy = (errorCount * 100.0) /  (ApplicationRunner.getTrainingSetLimit());
+
+        System.out.println("Training Percentage = " + trainingAccuracy);
+
     }
 
     public void test() {
@@ -47,7 +53,8 @@ public class NeuralNet {
             performForwardPass(i);
             errorCount += calculateError(i);
         }
-        double testingAccuracy = (errorCount * 100.0) / (ApplicationRunner.getData().dataValues.size() - ApplicationRunner.getTrainingSetLimit());
+        double testingAccuracy = (errorCount * 100.0) /
+                (ApplicationRunner.getData().dataValues.size() - ApplicationRunner.getTrainingSetLimit());
 
         System.out.println("Accuracy Percentage = " + testingAccuracy);
     }

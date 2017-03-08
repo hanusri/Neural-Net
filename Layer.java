@@ -20,6 +20,7 @@ public class Layer {
 
         if (ApplicationRunner.getData().dataValues == null || ApplicationRunner.getData().dataValues.size() == 0)
             return false;
+        // access data : input accessing
         List lstinputNodes = ApplicationRunner.getData().dataValues.get(0).getAttributes();
         for (int i = 0; i < lstinputNodes.size(); i++) {
             Node node = new Node(this);
@@ -64,7 +65,7 @@ public class Layer {
     public void setInputLayerOutputValues(int recordId) {
         if (this.layerType != LayerType.INPUT)
             return;
-
+        // access data : input accessing
         List<Double> inputLayerOutputValues = ApplicationRunner.getData().dataValues.get(recordId).attributes;
 
         for (int i = 0; i < inputLayerOutputValues.size(); i++) {
@@ -102,8 +103,9 @@ public class Layer {
     }
 
     public int calculateError(int recordId) {
+        // access data : Output
         Node outputNode = nodes.get(0);
-        int nodeOutput = outputNode.getOutputX() >= 0 && outputNode.getOutputX() <= 1 ? 1 : -1;
+        int nodeOutput = outputNode.getOutputX() >= 0.5 ? 1 : -1;
 
         int actualOutput = (int) Data.a2.get(recordId);
 
