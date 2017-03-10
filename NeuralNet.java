@@ -87,7 +87,7 @@ public class NeuralNet {
 
         // Update all connection weights:
         for (int i = layers.size() - 2; i >= 0; i--) {
-            layers.get(i).updateEdgesWeight();
+            layers.get(i).updateEdgesWeight(i);
         }
     }
 

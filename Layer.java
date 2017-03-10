@@ -97,9 +97,12 @@ public class Layer {
             node.calculateGradientValue();
     }
 
-    public void updateEdgesWeight() {
-        for (Node node : nodes)
-            node.updateEdgesWeight();
+    public void updateEdgesWeight(int hiddenLayerId) {
+        System.out.println("Hidden Layer Id " + hiddenLayerId + " :");
+
+        for (int i = 0;i < nodes.size();i++) {
+            nodes.get(i).updateEdgesWeight();
+        }
     }
 
     public int calculateError(int recordId) {
@@ -107,7 +110,7 @@ public class Layer {
         Node outputNode = nodes.get(0);
         int nodeOutput = outputNode.getOutputX() >= 0.5 ? 1 : -1;
 
-        int actualOutput = (int) Data.a2.get(recordId);
+        Double actualOutput = (Double) Data.a2.get(recordId);
 
         return nodeOutput * actualOutput == 1 ? 0 : 1;
     }

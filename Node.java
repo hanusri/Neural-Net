@@ -56,10 +56,12 @@ public class Node {
     }
 
     public void updateEdgesWeight() {
-        for (Edge edge : adjList) {
-            Double newWeight = edge.getWeight() + (ApplicationRunner.getLearningRate() * outputX *
-                    edge.getDestination().getGradient());
-            edge.setWeight(newWeight);
+        for (int i = 0;i < adjList.size();i++) {
+            Double newWeight = adjList.get(i).getWeight() + (ApplicationRunner.getLearningRate() * outputX *
+                    adjList.get(i).getDestination().getGradient());
+            adjList.get(i).setWeight(newWeight);
+            adjList.get(i).getDestination().revAdjList.get(i).setWeight(newWeight);
+            System.out.print("      " + newWeight);
         }
     }
 

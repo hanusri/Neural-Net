@@ -15,7 +15,11 @@ public class ApplicationRunner {
     private static int trainingSetLimit;
     private static int datasetType;
 
-    public static void main(String[] args) {
+    public static void setTrainingSetLimit(int trainingSetLimit) {
+		ApplicationRunner.trainingSetLimit = trainingSetLimit;
+	}
+
+	public static void main(String[] args) {
 
 
         //TODO Integrate with pre processing and construct neural network
@@ -34,6 +38,8 @@ public class ApplicationRunner {
 
         trainingSetLimit = (int) (data.dataValues.size() * Integer.parseInt(args[0]) / 100);
 
+       
+        
         NeuralNet network = new NeuralNet();
         network.initializeNetwork();
         // calculate the forward propagation of each layer and calculate all parameters
